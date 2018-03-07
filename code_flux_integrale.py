@@ -1,4 +1,4 @@
-﻿#
+#
 #	Calcul du flux recu par un cylindre
 #		calcul integral pour le flux direct
 #		modelisation anisotrope pour le flux diffus, d'apres la methode de (Perez et. al 1990)
@@ -113,10 +113,10 @@ def flux_diffus_horizon_voute_perez(diffus_horizontal, direct_normal, hauteur_so
 	b = max(math.cos(math.radians(85)), math.cos(math.radians(ksi_z)))
 	ma = 1/(math.cos(math.radians(ksi_z)) + 0.50572 * ((96.07995 - ksi_z)**-1.6364))
 	
-	
 	# Delta represente l'eclairement du ciel
 	delta = ma * diffus_horizontal / I0
 	
+	# coefficients donnes par PEREZ et al (1990)
 	if epsilon <= 1.065:
 		f11 = 0.013
 		f12 = 0.764
@@ -181,7 +181,6 @@ def flux_diffus_horizon_voute_perez(diffus_horizontal, direct_normal, hauteur_so
 		f22 = -2.917
 		f23 = 0.249
 		
-	# coefficients donnes par PEREZ et al (1990)
 	# coefficient ponderant les densites du flux circumsolaire
 	K1 = max(0, f11 + f12 * delta + pi * ksi_z * f13 / 180)
 	
@@ -194,8 +193,9 @@ def flux_diffus_horizon_voute_perez(diffus_horizontal, direct_normal, hauteur_so
 	# retourne la valeur du flux diffus de l'horizon et de la voute celeste
 	return diffus_horizon_voute
 	
-# Cette fonction permet de retourner la valeur du flux solaire absorbe par un individu, a partir des valeurs des flux solaires diffus et direct horizontaux, de l'albedo du sol, du jour de l'annee, de l'heure, du numero du fuseau, de la latitude et de la longitude du site
-def flux_waldhani (diffus_horizontal, direct_horizontal, albedo, jour, heure, fuseau, latitude, longitude_est): 
+# Cette fonction permet de retourner la valeur du flux solaire absorbe par un individu, 
+# a partir des valeurs des flux solaires diffus et direct horizontaux, de l'albedo du sol, du jour de l'annee, de l'heure, du numero du fuseau, de la latitude et de la longitude du site
+def flux_cylindre_anisotrope (diffus_horizontal, direct_horizontal, albedo, jour, heure, fuseau, latitude, longitude_est): 
 
 	# source : Wikipedia. L'equation du temps permet de calculer le temps solaire vrai.
 	equation_temps = 7.678 * math.sin(1.374 + (2 * pi * (jour - 81)/365)) - 9.87 * math.sin(2 * (2 * pi * (jour - 81)/365)) 
@@ -291,8 +291,8 @@ def temperature_mrt_fluxsolaire(temperature_mrt_classique, diffus_horizontal, di
 	hauteur_cylindre = 1.73
 	S_cylindre = pi * rayon_cylindre * hauteur_cylindre
 	
-	#flux direct, diffus, reflechi Waldhani en W/m²
-	flux_direct, flux_diffus, flux_reflechi = flux_waldhani(diffus_horizontal, direct_horizontal, albedo, jour, heure, fuseau, latitude, longitude_est) / S_cylindre
+	#flux direct, diffus, reflechi avec diffus anisotrope en W/m²
+	flux_direct, flux_diffus, flux_reflechi = flux_cylindre_anisotrope(diffus_horizontal, direct_horizontal, albedo, jour, heure, fuseau, latitude, longitude_est) / S_cylindre
 	temperature_mrt_solaire = math.pow(temperature_radiante + (alpha_clo * flux_direct + f_eff * alpha_clo * flux_diffus + f_eff * alpha_clo * flux_reflechi)/(sigma * epsilon), 0.25) - 273.15
 	
 	return temperature_mrt_solaire
