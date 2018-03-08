@@ -289,7 +289,7 @@ def temperature_mrt_fluxsolaire(temperature_mrt_classique, diffus_horizontal, di
 	# geometrie cylindre
 	rayon_cylindre = 0.17
 	hauteur_cylindre = 1.73
-	S_cylindre = pi * rayon_cylindre * hauteur_cylindre
+	S_cylindre = 2*pi * rayon_cylindre * hauteur_cylindre
 	
 	#flux direct, diffus, reflechi avec diffus anisotrope en W/m²
 	flux_direct, flux_diffus, flux_reflechi = flux_cylindre_anisotrope(diffus_horizontal, direct_horizontal, albedo, jour, heure, fuseau, latitude, longitude_est) / S_cylindre
