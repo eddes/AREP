@@ -3,6 +3,9 @@
 # based on: Peter Hoeppe's PET fortran code, from the VDI Norm 3787, Blatt 2
 # and on : Djordje Spasic's python code downloaded on github:
 # https://github.com/stgeorges/ladybug/commit/b0c2ea970252b62d22bf0e35d739db7f385a3f26
+# the reference publication can be found on ResearchGate https://www.researchgate.net/publication/324168880_The_PET_comfort_index_Questioning_the_model
+# (also available on Elsevier https://www.sciencedirect.com/science/article/pii/S0360132318301896 )
+
 
 import numpy as np
 import math as math
