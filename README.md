@@ -6,3 +6,4 @@ In this folder you will find two python routines that contain:
 
 You are free to use them on the condition to cite the authors
    "E. Walther (AREP) and Q. Goestchel (ENS Paris-Saclay),  after D. Spasic's version".
+   or alternatively the article reference https://www.sciencedirect.com/science/article/pii/S0360132318301896
