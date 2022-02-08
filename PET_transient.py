@@ -6,7 +6,6 @@
 # in Building & Environment (2018)
 
 import numpy as np
-import math as math
 from scipy.optimize import fsolve
 
 # fonction for vapour pressure
@@ -123,7 +122,7 @@ def Suda(tbody,tsk):
     if sig_skin<0:
         # In this case, Tsk<Tsk_set --> the sweat flow is reduced
         sig_skin=0.
-    #qmsw = 170 * sig_body * math.exp((sig_skin) / 10.7)  # [g/m2/h] is the expression from Gagge's model
+    #qmsw = 170 * sig_body * np.exp((sig_skin) / 10.7)  # [g/m2/h] is the expression from Gagge's model
     qmsw = 304.94*10**(-3) * sig_body
     # 500 g/m^2/h is the upper sweat rate limit
     if qmsw > 500:
@@ -242,7 +241,7 @@ def fc_htcl(icl,ht,Adu,Aclo):
     r1 = facl * Adu /(6.28 * ht * y)  # Internal radius
     di = r2 - r1
     # Calculation of the equivalent thermal resistance of body tissues
-    htcl = (6.28 * ht * y * di)/(rcl * math.log(r2/r1)*Aclo)  # [W/(m2.K)]
+    htcl = (6.28 * ht * y * di)/(rcl * np.log(r2/r1)*Aclo)  # [W/(m2.K)]
     return htcl
 
 # - The clothing model of Schiavon and Lee (clo=clo(T 6h du mat))
@@ -303,9 +302,9 @@ def fc_clo_properties(v_walk,v,he,icl,i_m):
     if v_walk < 0.7:
         v_walk = 0.0052 * (he/58 - 58)
     # "effective" wind speed including body movement
-    v = math.sqrt(v**2 + v_walk**2)
+    v = np.sqrt(v**2 + v_walk**2)
     # correction 
-    corr_T = math.exp(0.042 - 0.398 * v  + 0.066 * v**2 - 0.378 * v_walk + 0.094 * v_walk**2)
+    corr_T = np.exp(0.042 - 0.398 * v  + 0.066 * v**2 - 0.378 * v_walk + 0.094 * v_walk**2)
     # upper bound for correlation validity
     if v > 3.5 or corr_T>0.582:
         corr_T = 0.582
