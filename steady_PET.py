@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# Transient PET calculation routine (work in progress as of Feb. 2022)
-# by Edouard Walther and William Dumontaud 2021-2022
+# Steady PET calculation routine
 # based on the paper "The PET comfort index: Questioning the model"
 # E. Walther and Q. Goetschel 
 # in Building & Environment (2018)
