@@ -16,8 +16,8 @@ The corrected version of the PET thermal comfort index after the VDI norm (based
 
 A state-of-the art version of the steady PET index, as above. Major changes are 
 
-[-] replacing the old school dichotomy method by scipy's fsolve (dividing by approx. 3 the function evaluations)
-[-] writing the the docstring
+- replacing the old school dichotomy method by scipy's fsolve (dividing by approx. 3 the function evaluations)
+- writing the the docstring
 
 ## PET_transient.py
 
