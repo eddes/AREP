@@ -12,13 +12,17 @@ The corrected version of the PET thermal comfort index after the VDI norm (based
      "E. Walther (AREP) and Q. Goestchel (ENS Paris-Saclay),  after D. Spasic's version".
      or alternately the article reference https://www.sciencedirect.com/science/article/pii/S0360132318301896
 
+## steady_PET.py
+
+A state-of-the art version of the steady PET index, as above. Major changes are 
+
+[-] replacing the old school dichotomy method by scipy's fsolve (dividing by approx. 3 the function evaluations)
+[-] writing the the docstring
+
 ## PET_transient.py
 
 A work in progress version of the transient PET model.
 
-## PET_steady.py
-
-[To be updated] 
-
 ## code_flux_integrale.py
+
 A bit of code to compute the total flux on a standing invidiual, materialised as a cylinder, and including Perez diffuse/direct/circumsolar sky models.
