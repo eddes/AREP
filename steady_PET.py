@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Steady PET calculation routine
+# a 2022 update with procedure improvements
 # based on the paper "The PET comfort index: Questioning the model"
 # E. Walther and Q. Goetschel 
 # in Building & Environment (2018)
@@ -270,46 +271,6 @@ def fc_clo_T6am(T_6AM):
     return clo
 
 
-def fc_clo_properties(v_walk,v,he,icl,i_m):
-    """
-    An integration of the correction of the clothin heat and mass transfer properties after Havenith & Holmer 2002.
-
-    Parameters
-    ----------
-    v_walk : float
-        Walking velocity.
-    v : float
-        Air velocity.
-    he : float
-        Total metabolic activity (W/m2).
-    icl : float
-        Clothing insulation level.
-    i_m : float
-        Woodcock ratio for mass transfer.
-
-    Returns
-    -------
-    v : float
-        Effective air velocity.
-    icl : float
-        Corrected clothing insulation level.
-    i_m : float
-        Corrected Woodcock ratio.
-    """
-    #correction of clo properties after (Havenith et al. 2002) & (Holmer et.al 2002)
-    # v_walk depending on metabolic rate
-    if v_walk < 0.7:
-        v_walk = 0.0052 * (he/58 - 58)
-    # "effective" wind speed including body movement
-    v = np.sqrt(v**2 + v_walk**2)
-    # correction 
-    corr_T = np.exp(0.042 - 0.398 * v  + 0.066 * v**2 - 0.378 * v_walk + 0.094 * v_walk**2)
-    # upper bound for correlation validity
-    if v > 3.5 or corr_T>0.582:
-        corr_T = 0.582
-    icl = icl * corr_T  # corrected insulation level
-    i_m = i_m* (4.9 - 6.5 * corr_T + 2.6 * corr_T**2) # corrected Woodcock ratio
-    return v,icl,i_m 
 
 ########## Vectorial MEMI balance calculation function ##########
 def Syst(T, Ta, Tmrt, HR, v, age, sex, ht, mbody, pos, M, icl, mode, p):
@@ -375,8 +336,6 @@ def Syst(T, Ta, Tmrt, HR, v, age, sex, ht, mbody, pos, M, icl, mode, p):
 
     # correction for wind 
     i_m = 0.38 # Woodcock ratio for vapour transfer through clothing [-]
-    v_walk=0 # walking velocity
-    v, icl, i_m = fc_clo_properties(v_walk, v, he, icl, i_m)
     
     # Calculation of the Burton surface increase coefficient, k = 0.31 for Hoeppe:
     fcl = 1 + (0.31 * icl) # Increase heat exchange surface depending on clothing level
@@ -513,7 +472,7 @@ def resolution(Ta, Tmrt, HR, v, age, sex, ht, mbody, pos, M, icl, Tx, p):
 
 
 ########## Function calculating the PET in transient regime ##########
-def fc_steady_PET(Ta,Tmrt,HR,v,icl,p):
+def fc_steady_PET(Ta,Tmrt,HR,v,T6am,p):
     """
     This function computes the PET in transient regime.
 
@@ -539,8 +498,9 @@ def fc_steady_PET(Ta,Tmrt,HR,v,icl,p):
         Steady-state PET under the given ambient conditions
 
     """
+    icl=fc_clo_T6am(T6am)
     # initial guess
-    Tguess=[36.7,33,0.5*(Ta+Tmrt)]
+    Tguess=[36.7,34,0.5*(Ta+Tmrt)]
     # solve for Tc, Tsk, Tcl temperatures
     Tstable= fsolve(Syst, Tguess ,args=(Ta, Tmrt, HR, v, age, sex, ht, mbody, pos, M, icl, True ,p))
     # compute PET
@@ -561,16 +521,16 @@ sigm = 5.67*10**(-8) # Stefan-Boltzmann constant [W/(m2*K^(-4))]
 eta = 0. # Body efficiency
 
 # Input data for the PET
-age = 35
+age = 23
 sex = 1 # 1 for men and 2 for women
 pos = 1 # 1=standing
 mbody = 75 # body mass [kg]
 ht = 1.80 # body height [m]
-M = 100 # [W] Metabolic activity level
+M = 80 # [W] Metabolic activity level
 cp=3492 # body specific heat capacity
 
 envmnt="office"
-envmnt="high_MRT"
+# envmnt="high_MRT"
 # envmnt="winter"
 
 if envmnt=="office":
@@ -583,11 +543,10 @@ if envmnt=="winter":
     Tair, Tmrt = 0,0
     HR, v, p, T6am = 20, .5, 1018.25, 15
 
-# get the clothing insulation according to the weather
-icl = fc_clo_T6am(T6am)
-Tinit = [36.8,33.8,(Tair+Tmrt)*0.5]
+
+Tinit = [36.8,34,(Tair+Tmrt)*0.5]
 
 if __name__ == '__main__':
     # compute 
-    Temp_PET= fc_steady_PET(Tair,Tmrt,HR,v,icl,p)
+    Temp_PET= fc_steady_PET(Tair,Tmrt,HR,v, T6am, p)
     print(round(Temp_PET[0],2))
