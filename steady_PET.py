@@ -153,7 +153,7 @@ def fc_hc(pos,v,p):
         hc = 2.67 + 6.5*v**0.67
     if pos==2: # standing
         hc = 2.26 + 7.42*v**0.67
-    if pos==3: # crouching
+    if pos==3: # forced convection by Gagge
         hc = 8.6*v**0.513
     # modification of hc with the total pressure
     return hc*(p/po)**0.55
@@ -471,10 +471,9 @@ def resolution(Ta, Tmrt, HR, v, age, sex, ht, mbody, pos, M, icl, Tx, p):
     return (Tn, 1)
 
 
-########## Function calculating the PET in transient regime ##########
 def fc_steady_PET(Ta,Tmrt,HR,v,T6am,p):
     """
-    This function computes the PET in transient regime.
+    This function computes the PET in steady  regime.
 
     Parameters
     ----------
