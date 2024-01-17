@@ -123,7 +123,7 @@ def Suda(tbody,tsk):
         # In this case, Tsk<Tsk_set --> the sweat flow is reduced
         sig_skin=0.
     #qmsw = 170 * sig_body * np.exp((sig_skin) / 10.7)  # [g/m2/h] is the expression from Gagge's model
-    qmsw = 304.94*10**(-3) * sig_body
+    qmsw = 304.94 * sig_body
     # 500 g/m^2/h is the upper sweat rate limit
     if qmsw > 500:
         qmsw = 500
